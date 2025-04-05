@@ -3,6 +3,9 @@ import todoRedcer from "../features/todo/todoSlice";
 
 
 const store = configureStore({
-    reducer: todoRedcer
+    reducer: {
+        todos: todoRedcer
+    }
 });
+
 export default store;

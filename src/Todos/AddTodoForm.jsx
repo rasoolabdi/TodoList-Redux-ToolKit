@@ -1,21 +1,23 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { addTodo } from "../features/todo/todoSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { addAsyncTodo } from "../features/todo/todoSlice";
 
 
 const AddTodoForm = () => {
     const [value , setValue] = useState("");
+    const { loading } = useSelector((state) => state.todos);
     const dispatch = useDispatch();
 
     const handleSubmit = (e) => {
         e.preventDefault();
         if(!value) return;
-        dispatch(addTodo({ title: value }));
+        // dispatch(addTodo({ title: value }));  // local state
+        dispatch(addAsyncTodo({ title: value }));  // global state
         setValue("");
     };
 
     return (
-        <form className="form-inline mt-3 mb-4" onSubmit={handleSubmit}>
+        <form className={`${loading ? "opacity-50" : "opacity-100"} form-inline mt-3 mb-4`} onSubmit={handleSubmit}>
             <label className="mb-1" htmlFor="name">نام :</label>
             <input 
                 autoComplete="off"
@@ -26,7 +28,9 @@ const AddTodoForm = () => {
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
             />
-            <button type="submit" className="btn btn-primary mt-1">افزودن</button>
+            <button type="submit" className="btn btn-primary mt-1" disabled={loading}>
+                {loading ? "... لطفا کمی صبر کنید .در حال افزودن" : "افزودن"}
+            </button>
         </form>
     )
 };
